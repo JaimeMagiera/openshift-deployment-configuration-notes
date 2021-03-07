@@ -12,8 +12,33 @@ Allow forged transmits	No
 Allow MAC changes	    No
 ```
 
+## DHCP
+
+### Install
+
+```
+sudo apt-get install isc-dhcp-server
+```
+
+### Configure
+
 ## DNS
 
+### Install
+
+```
+sudo apt install bind9
+```
+
+### Configure
+
 ## Load Balancer
+
+### Install
+
+```
+sudo apt-get install haproxy
+```
+
 
 ## Proxy (if on a private network)
