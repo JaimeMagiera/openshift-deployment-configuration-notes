@@ -30,6 +30,8 @@ Ensure that no other DHCP servers are activated in the network of your homelab e
 sudo apt-get install isc-dhcp-server
 ```
 
+### Configure
+
 /etc/dhcp/dhcpd.conf:
 ```
 # dhcpd.conf
@@ -100,9 +102,6 @@ group {
 }
 ```
 
-
-### Configure
-
 ## DNS
 
 ### Install
@@ -112,6 +111,63 @@ sudo apt install bind9
 ```
 
 ### Configure
+
+/etc/bind/named.conf.options:
+```
+include "/etc/bind/rndc.key";
+
+acl internals {
+    // lo adapter
+    127.0.0.1;
+
+    // CIDR for your homelab network
+    192.168.178.0/24;
+};
+
+options {
+        directory "/var/cache/bind";
+
+        // If there is a firewall between you and nameservers you want
+        // to talk to, you may need to fix the firewall to allow multiple
+        // ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+
+        // If your ISP provided one or more IP addresses for stable
+        // nameservers, you probably want to use them as forwarders.
+        // Uncomment the following block, and insert the addresses replacing
+        // the all-0's placeholder.
+
+        forwarders {
+          8.8.8.8;
+          8.8.4.4;
+        };
+        forward only;
+
+        //========================================================================
+        // If BIND logs error messages about the root key being expired,
+        // you will need to update your keys.  See https://www.isc.org/bind-keys
+        //========================================================================
+        dnssec-validation no;
+
+        listen-on-v6 { none; };
+        auth-nxdomain no;
+        listen-on port 53 { any; };
+
+        // Allow queries from my Homelab and also from Wireguard Clients.
+        allow-query { internals; };
+        allow-query-cache { internals; };
+        allow-update { internals; };
+        recursion yes;
+        allow-recursion { internals; };
+        allow-transfer { internals; };
+
+        dnssec-enable no;
+
+        check-names master ignore;
+        check-names slave ignore;
+        check-names response ignore;
+
+};
+```
 
 ## Load Balancer
 
