@@ -54,7 +54,7 @@ use-host-decl-names on;
 default-lease-time 300; # 5 minutes
 max-lease-time 300;     # 5 minutes
 
-# sepp.net DNS zones
+# homelab.net DNS zones
 zone homelab.net. {
   primary 192.168.178.5; # This server is the primary DNS server for the zone
   key rndc-key;       # Use the key we defined earlier for dynamic updates
