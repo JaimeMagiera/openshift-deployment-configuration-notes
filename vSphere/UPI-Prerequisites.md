@@ -240,6 +240,26 @@ zone "178.168.192.in-addr.arpa" {
 };
 ```
 
+Zone file for homlab.net:
+/etc/bind/forward.homelab.net
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     homelab.net. root.homelab.net. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      homelab.net.
+@       IN      A       192.168.178.5
+@       IN      AAAA    ::1
+```
+
+
 The name of the next file depends on the subnet that is used:
 
 /etc/bind/178.168.192.in-addr.arpa
@@ -269,6 +289,8 @@ $TTL 604800     ; 1 week
 ```
 
 ### DNS records for OKD 4
+
+Zone file for c1.homelab.net (our OKD 4 cluster will be in this domain):
 
 /etc/bind/forward.c1.homelab.net
 ```
