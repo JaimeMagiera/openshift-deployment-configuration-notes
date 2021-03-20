@@ -11,7 +11,7 @@ I use Raspberry Pi OS (debian based).
 * local domain: homelab.net
 * local cluster (name: c1) domain: c1.homelab.net
 * DHCP range: 192.168.178.40 ... 192.168.178.199
-* Static IPs for k8s bootstrap, masters and workers
+* Static IPs for OKD's bootstrap, masters and workers
 
 ## Set static IP address on Raspberry Pi
 /etc/dhcpcd.conf
