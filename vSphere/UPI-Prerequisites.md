@@ -13,6 +13,14 @@ I use Raspberry Pi OS (debian based).
 * DHCP range: 192.168.178.40 ... 192.168.178.199
 * Static IPs for OKD's bootstrap, masters and workers
 
+## Upgrade Raspberry Pi
+
+```
+sudo apt-get update
+sudo apt-get upgrade
+sudo reboot
+```
+
 ## Set static IP address on Raspberry Pi
 /etc/dhcpcd.conf
 ```
@@ -30,9 +38,6 @@ The DHCP server in this example is setup with DDNS (Dynamic DNS) enabled.
 ### Install
 
 ```
-sudo apt-get update
-sudo apt-get upgrade
-sudo reboot
 sudo apt-get install isc-dhcp-server
 ```
 
