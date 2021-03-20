@@ -1,15 +1,20 @@
 # Prerequites for vSphere UPI
 
-## Security Policies in VM Network
+In this example I describe the setup of a DNS/DHCP server and a Load Balancer on a Raspberry PI microcomputer. The instructions most certainly will also work for other environments.
 
-Ensure that promiscuous mode is turned off on your VM Network in vSphere. If it is turned on, you will have troubles with OVNKubernetes. 
+I use Raspberry Pi OS (debian based).
 
-> Because of a bug in the NetworkManager v1.26 used in OKD 4.6 / OKD 4.7 it may be that after a reset of your VMs they will get wrong IP addresses from the DHCP server. That can break your cluster!
+## IP Addresses of components in this example
+* DSL modem/gateway: 192.168.178.1
+* IP address of Raspberry Pi (DHCP/DNS/Load Balancer): 192.168.178.5
 
+## Set static IP address on Raspberry Pi
+In /etc/dhcpcd.conf:
 ```
-Allow promiscuous mode	No
-Allow forged transmits	No
-Allow MAC changes	    No
+interface eth0
+static ip_address=192.168.178.5/24
+static routers=192.168.178.1
+static domain_name_servers=192.168.0.2 8.8.8.8
 ```
 
 ## DHCP
@@ -19,6 +24,9 @@ Allow MAC changes	    No
 ```
 sudo apt-get install isc-dhcp-server
 ```
+
+
+
 
 ### Configure
 
