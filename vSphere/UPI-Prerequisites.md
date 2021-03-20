@@ -262,14 +262,6 @@ worker3 IN      A       192.168.178.223
 *.apps.c1.homelab.net.  IN CNAME load-balancer.c1.homelab.net.
 api-int.c1.homelab.net. IN CNAME load-balancer.c1.homelab.net.
 api.c1.homelab.net.     IN CNAME load-balancer.c1.homelab.net.
-
-etcd-0.c1.homelab.net.  IN CNAME master0.c1.homelab.net.
-etcd-1.c1.homelab.net.  IN CNAME master1.c1.homelab.net.
-etcd-2.c1.homelab.net.  IN CNAME master2.c1.homelab.net.
-
-_etcd-server-ssl._tcp.c1.homelab.net. 180 IN SRV 0 10 2380 etcd-0.c1.homelab.net.
-_etcd-server-ssl._tcp.c1.homelab.net. 180 IN SRV 0 10 2380 etcd-1.c1.homelab.net.
-_etcd-server-ssl._tcp.c1.homelab.net. 180 IN SRV 0 10 2380 etcd-2.c1.homelab.net.
 ```
 
 ## Load Balancer
