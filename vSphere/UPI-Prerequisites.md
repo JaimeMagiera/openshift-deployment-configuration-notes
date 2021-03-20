@@ -25,6 +25,8 @@ static domain_name_servers=192.168.178.5
 ## DHCP
 Ensure that no other DHCP servers are activated in the network of your homelab e.g. in your internet router.
 
+The DHCP server in this example is setup with DDNS (Dynamic DNS) enabled.
+
 ### Install
 
 ```
