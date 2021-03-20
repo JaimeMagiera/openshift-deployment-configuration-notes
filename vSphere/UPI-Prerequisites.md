@@ -381,24 +381,22 @@ defaults
 # You can see the stats and observe OKD's bootstrap process by opening
 # http://<IP>:4321/haproxy?stats
 listen stats
-       bind :4321
+    bind :4321
+    mode            http
+    log             global
+    maxconn 10
 
-        mode            http
-        log             global
+    timeout client  100s
+    timeout server  100s
+    timeout connect 100s
+    timeout queue   100s
 
-        maxconn 10
-
-        clitimeout      100s
-        srvtimeout      100s
-        contimeout      100s
-        timeout queue   100s
-
-        stats enable
-        stats hide-version
-        stats refresh 30s
-        stats show-node
-        stats auth admin:password
-        stats uri  /haproxy?stats
+    stats enable
+    stats hide-version
+    stats refresh 30s
+    stats show-node
+    stats auth admin:password
+    stats uri  /haproxy?stats
 
 
 frontend openshift-api-server
