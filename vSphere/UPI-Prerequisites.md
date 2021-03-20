@@ -13,7 +13,7 @@ I use Raspberry Pi OS (debian based).
 * Static IPs for k8s bootstrap, masters and workers
 
 ## Set static IP address on Raspberry Pi
-In /etc/dhcpcd.conf:
+/etc/dhcpcd.conf
 ```
 interface eth0
 static ip_address=192.168.178.5/24
@@ -32,7 +32,7 @@ sudo apt-get install isc-dhcp-server
 
 ### Configure
 
-/etc/dhcp/dhcpd.conf:
+/etc/dhcp/dhcpd.conf
 ```
 # dhcpd.conf
 #
@@ -112,7 +112,7 @@ sudo apt install bind9
 
 ### Configure
 
-/etc/bind/named.conf.options:
+/etc/bind/named.conf.options
 ```
 include "/etc/bind/rndc.key";
 
@@ -166,6 +166,25 @@ options {
         check-names slave ignore;
         check-names response ignore;
 
+};
+```
+
+/etc/bind/named.conf.local
+```
+#include "/etc/bind/rndc.key";
+
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+zone "homelab.net" {
+   type master;
+   file "/etc/bind/forward.homelab.net";
+   allow-update { key rndc-key; };
 };
 ```
 
