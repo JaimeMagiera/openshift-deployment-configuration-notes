@@ -55,12 +55,16 @@ default-lease-time 300; # 5 minutes
 max-lease-time 300;     # 5 minutes
 
 # sepp.net DNS zones
-zone sepp.net. {
+zone homelab.net. {
   primary 192.168.178.5; # This server is the primary DNS server for the zone
   key rndc-key;       # Use the key we defined earlier for dynamic updates
 }
+zone 178.168.192.in-addr.arpa. {
+  primary 192.168.178.5; # This server is the primary reverse DNS for the zone
+  key rndc-key;       # Use the key we defined earlier for dynamic updates
+}
 
-ddns-domainname "sepp.net.";
+ddns-domainname "homelab.net.";
 ####################################################################################
 
 
@@ -68,8 +72,8 @@ ddns-domainname "sepp.net.";
 # Basic configuration                                                              #
 ####################################################################################
 # option definitions common to all supported networks...
-default-lease-time 60;
-max-lease-time     60;
+default-lease-time 300;
+max-lease-time     300;
 
 # If this DHCP server is the official DHCP server for the local
 # network, the authoritative directive should be uncommented.
