@@ -32,6 +32,7 @@ The DHCP server in this example is setup with DDNS (Dynamic DNS) enabled.
 ```
 sudo apt-get update
 sudo apt-get upgrade
+sudo reboot
 sudo apt-get install isc-dhcp-server
 ```
 
