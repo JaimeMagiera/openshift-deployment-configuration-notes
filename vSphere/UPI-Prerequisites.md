@@ -311,5 +311,139 @@ api.c1.homelab.net.     IN CNAME load-balancer.c1.homelab.net.
 sudo apt-get install haproxy
 ```
 
+### Configure
+
+/etc/haproxy/haproxy.cfg
+```
+global
+        log /dev/log    local0
+        log /dev/log    local1 notice
+        chroot /var/lib/haproxy
+        stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
+        stats timeout 30s
+        user haproxy
+        group haproxy
+        daemon
+
+        # Default SSL material locations
+        ca-base /etc/ssl/certs
+        crt-base /etc/ssl/private
+
+        # Default ciphers to use on SSL-enabled listening sockets.
+        # For more information, see ciphers(1SSL). This list is from:
+        #  https://hynek.me/articles/hardening-your-web-servers-ssl-ciphers/
+        # An alternative list with additional directives can be obtained from
+        #  https://mozilla.github.io/server-side-tls/ssl-config-generator/?server=haproxy
+        ssl-default-bind-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:RSA+AESGCM:RSA+AES:!aNULL:!MD5:!DSS
+        ssl-default-bind-options no-sslv3
+
+defaults
+        log     global
+        mode    http
+        option  httplog
+        option  dontlognull
+        timeout connect 20000
+        timeout client  10000
+        timeout server  10000
+        errorfile 400 /etc/haproxy/errors/400.http
+        errorfile 403 /etc/haproxy/errors/403.http
+        errorfile 408 /etc/haproxy/errors/408.http
+        errorfile 500 /etc/haproxy/errors/500.http
+        errorfile 502 /etc/haproxy/errors/502.http
+        errorfile 503 /etc/haproxy/errors/503.http
+        errorfile 504 /etc/haproxy/errors/504.http
+
+
+# You can see the stats and observe OKD's bootstrap process by opening
+# http://<IP>:4321/haproxy?stats
+listen stats
+       bind :4321
+
+        mode            http
+        log             global
+
+        maxconn 10
+
+        clitimeout      100s
+        srvtimeout      100s
+        contimeout      100s
+        timeout queue   100s
+
+        stats enable
+        stats hide-version
+        stats refresh 30s
+        stats show-node
+        stats auth admin:password
+        stats uri  /haproxy?stats
+
+
+frontend openshift-api-server
+    bind *:6443
+    default_backend openshift-api-server
+    mode tcp
+    option tcplog
+
+backend openshift-api-server
+    balance source
+    mode tcp
+    server bootstrap bootstrap.c1.homelab.net:6443 check
+    server master0 master0.c1.homelab.net:6443 check
+    server master1 master1.c1.homelab.net:6443 check
+    server master2 master2.c1.homelab.net:6443 check
+
+
+frontend machine-config-server
+    bind *:22623
+    default_backend machine-config-server
+    mode tcp
+    option tcplog
+
+backend machine-config-server
+    balance source
+    mode tcp
+    server bootstrap bootstrap.c1.homelab.net:22623 check
+    server master0 master0.c1.homelab.net:22623 check
+    server master1 master1.c1.homelab.net:22623 check
+    server master2 master2.c1.homelab.net:22623 check
+
+
+frontend ingress-http
+    bind *:80
+    default_backend ingress-http
+    mode tcp
+    option tcplog
+
+backend ingress-http
+    balance source
+    mode tcp
+    server master0 master0.c1.homelab.net:80 check
+    server master1 master1.c1.homelab.net:80 check
+    server master2 master2.c1.homelab.net:80 check
+
+    server worker0 worker0.c1.homelab.net:80 check
+    server worker1 worker1.c1.homelab.net:80 check
+    server worker2 worker2.c1.homelab.net:80 check
+    server worker3 worker3.c1.homelab.net:80 check
+
+
+frontend ingress-https
+    bind *:443
+    default_backend ingress-https
+    mode tcp
+    option tcplog
+
+backend ingress-https
+    balance source
+    mode tcp
+
+    server master0 master0.c1.homelab.net:443 check
+    server master1 master1.c1.homelab.net:443 check
+    server master2 master2.c1.homelab.net:443 check
+
+    server worker0 worker0.c1.homelab.net:443 check
+    server worker1 worker1.c1.homelab.net:443 check
+    server worker2 worker2.c1.homelab.net:443 check
+    server worker3 worker3.c1.homelab.net:443 check
+```
 
 ## Proxy (if on a private network)
