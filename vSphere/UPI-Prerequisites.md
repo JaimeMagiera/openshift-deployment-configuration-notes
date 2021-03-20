@@ -9,6 +9,7 @@ I use Raspberry Pi OS (debian based).
 * DSL modem/gateway: 192.168.178.1
 * IP address of Raspberry Pi (DHCP/DNS/Load Balancer): 192.168.178.5
 * local domain: homelab.net
+* local cluster (name: c1) domain: c1.homelab.net
 * DHCP range: 192.168.178.40 ... 192.168.178.199
 * Static IPs for k8s bootstrap, masters and workers
 
@@ -181,6 +182,7 @@ options {
 // organization
 //include "/etc/bind/zones.rfc1918";
 
+# All devices that don't belong to the OKD cluster will be maintained here.
 zone "homelab.net" {
    type master;
    file "/etc/bind/forward.homelab.net";
