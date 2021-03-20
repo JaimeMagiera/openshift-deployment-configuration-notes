@@ -39,6 +39,32 @@ sudo apt-get install isc-dhcp-server
 #
 
 ####################################################################################
+# Configuration for Dynamic DNS (DDNS) updates                                     #
+# Clients requesting an IP and sending their hostname for domain *.homelab.net     #
+# will be auto registered in the DNS server.                                       #
+####################################################################################
+ddns-updates on;
+ddns-update-style standard;
+
+# This option points to the copy rndc.key we created for bind9.
+include "/etc/bind/rndc.key";
+
+allow unknown-clients;
+use-host-decl-names on;
+default-lease-time 300; # 5 minutes
+max-lease-time 300;     # 5 minutes
+
+# sepp.net DNS zones
+zone sepp.net. {
+  primary 192.168.178.5; # This server is the primary DNS server for the zone
+  key rndc-key;       # Use the key we defined earlier for dynamic updates
+}
+
+ddns-domainname "sepp.net.";
+####################################################################################
+
+
+####################################################################################
 # Basic configuration                                                              #
 ####################################################################################
 # option definitions common to all supported networks...
@@ -111,7 +137,12 @@ group {
 sudo apt install bind9 dnsutils
 ```
 
-### Configure
+### Basic configuration
+
+For dynamic DNS (ddns) to work you should do this:
+```
+sudo chown -R bind:bind /etc/bind
+```
 
 /etc/bind/named.conf.options
 ```
@@ -194,6 +225,51 @@ zone "c1.homelab.net" {
    file "/etc/bind/forward.c1.homelab.net";
    allow-update { key rndc-key; };
 };
+```
+
+### DNS records for OKD 4
+
+/etc/bind/forward.c1.homelab.net
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     c1.homelab.net. root.c1.homelab.net. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      c1.homelab.net.
+@       IN      A       192.168.178.5
+@       IN      AAAA    ::1
+
+load-balancer IN A      192.168.178.5
+
+bootstrap IN    A       192.168.178.200
+
+master0 IN      A       192.168.178.210
+master1 IN      A       192.168.178.211
+master2 IN      A       192.168.178.212
+
+worker0 IN      A       192.168.178.220
+worker1 IN      A       192.168.178.221
+worker2 IN      A       192.168.178.222
+worker3 IN      A       192.168.178.223
+
+*.apps.c1.homelab.net.  IN CNAME load-balancer.c1.homelab.net.
+api-int.c1.homelab.net. IN CNAME load-balancer.c1.homelab.net.
+api.c1.homelab.net.     IN CNAME load-balancer.c1.homelab.net.
+
+etcd-0.c1.homelab.net.  IN CNAME master0.c1.homelab.net.
+etcd-1.c1.homelab.net.  IN CNAME master1.c1.homelab.net.
+etcd-2.c1.homelab.net.  IN CNAME master2.c1.homelab.net.
+
+_etcd-server-ssl._tcp.c1.homelab.net. 180 IN SRV 0 10 2380 etcd-0.c1.homelab.net.
+_etcd-server-ssl._tcp.c1.homelab.net. 180 IN SRV 0 10 2380 etcd-1.c1.homelab.net.
+_etcd-server-ssl._tcp.c1.homelab.net. 180 IN SRV 0 10 2380 etcd-2.c1.homelab.net.
 ```
 
 ## Load Balancer
