@@ -18,6 +18,7 @@ static domain_name_servers=192.168.0.2 8.8.8.8
 ```
 
 ## DHCP
+Ensure that no other DHCP servers are activated in the network of your homelab e.g. in your internet router.
 
 ### Install
 
