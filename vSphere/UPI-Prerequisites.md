@@ -22,6 +22,9 @@ sudo reboot
 ```
 
 ## Set static IP address on Raspberry Pi
+
+Add this to
+
 /etc/dhcpcd.conf
 ```
 interface eth0
