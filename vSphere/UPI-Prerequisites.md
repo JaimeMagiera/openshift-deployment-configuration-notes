@@ -6,7 +6,7 @@ I use Raspberry Pi OS (debian based).
 
 ## IP Addresses of components in this example
 * Homelab subnet: 192.168.178.0/24
-* DSL modem/gateway: 192.168.178.1
+* DSL router/gateway: 192.168.178.1
 * IP address of Raspberry Pi (DHCP/DNS/Load Balancer): 192.168.178.5
 * local domain: homelab.net
 * local cluster (name: c1) domain: c1.homelab.net
