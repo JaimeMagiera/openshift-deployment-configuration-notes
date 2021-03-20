@@ -186,6 +186,12 @@ zone "homelab.net" {
    file "/etc/bind/forward.homelab.net";
    allow-update { key rndc-key; };
 };
+
+zone "c1.homelab.net" {
+   type master;
+   file "/etc/bind/forward.c1.homelab.net";
+   allow-update { key rndc-key; };
+};
 ```
 
 ## Load Balancer
