@@ -18,7 +18,7 @@ I use Raspberry Pi OS (debian based).
 interface eth0
 static ip_address=192.168.178.5/24
 static routers=192.168.178.1
-static domain_name_servers=192.168.0.5 8.8.8.8
+static domain_name_servers=192.168.0.5
 ```
 
 ## DHCP
@@ -107,7 +107,7 @@ group {
 ### Install
 
 ```
-sudo apt install bind9
+sudo apt install bind9 dnsutils
 ```
 
 ### Configure
