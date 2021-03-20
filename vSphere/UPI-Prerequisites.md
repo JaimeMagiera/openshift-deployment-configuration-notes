@@ -65,6 +65,7 @@ zone 178.168.192.in-addr.arpa. {
 }
 
 ddns-domainname "homelab.net.";
+ddns-rev-domainname "in-addr.arpa.";
 ####################################################################################
 
 
@@ -201,7 +202,6 @@ options {
         check-names master ignore;
         check-names slave ignore;
         check-names response ignore;
-
 };
 ```
 
@@ -229,6 +229,41 @@ zone "c1.homelab.net" {
    file "/etc/bind/forward.c1.homelab.net";
    allow-update { key rndc-key; };
 };
+
+zone "178.168.192.in-addr.arpa" {
+   type master;
+   notify no;
+   file "/etc/bind/178.168.192.in-addr.arpa";
+   allow-update { key rndc-key; };
+};
+```
+
+The name of the next file depends on the subnet that is used:
+
+/etc/bind/178.168.192.in-addr.arpa
+```
+$TTL 604800     ; 1 week
+178.168.192.in-addr.arpa IN SOA ns1.homelab.net. root.homelab.net. (
+                                2019070742 ; serial
+                                10800      ; refresh (3 hours)
+                                1800       ; retry (30 minutes)
+                                1209600    ; expire (2 weeks)
+                                604800     ; minimum (1 week)
+                                )
+                        NS      ns1.homelab.net.
+
+200                     PTR     bootstrap.c1.homelab.net.
+
+210                     PTR     master0.c1.homelab.net.
+211                     PTR     master1.c1.homelab.net.
+212                     PTR     master2.c1.homelab.net.
+
+220                     PTR     worker0.c1.homelab.net.
+221                     PTR     worker1.c1.homelab.net.
+222                     PTR     worker2.c1.homelab.net.
+
+5                       PTR     api.c1.homelab.net.
+5                       PTR     api-int.c1.homelab.net.
 ```
 
 ### DNS records for OKD 4
